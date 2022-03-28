@@ -1,0 +1,12 @@
+
+<div class="navigation">
+	<div>{% if page.previous.url %}
+	<a class="prev" href="{{page.previous.url | relative_url}}">⇦{{page.previous.episode}}</a>
+	{% endif %}</div>
+	<div><h1 class="episode">{{ page.episode }}</h1></div>
+	<div>
+	{% if page.next.url %}
+	<a class="next" href="{{page.next.url | relative_url}}">{{page.next.episode}}⇨</a>
+	{% endif %}
+	</div>
+</div>

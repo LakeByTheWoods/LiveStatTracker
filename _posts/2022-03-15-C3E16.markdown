@@ -1,0 +1,9 @@
+---
+title: testing
+layout: default
+videoId: 'O6-NaqWorI0'
+episodeevents: c3e16events.js
+pc: c3lvl5chars.js
+npc: c3e16npc.js
+episode: Campaign 3 Episode 16
+---

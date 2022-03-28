@@ -1,0 +1,10 @@
+---
+title: testing
+layout: default
+videoId: 'c66mDHckyoM'
+episodeevents: c3e18events.js
+pc: c3lvl5chars.js
+npc: c3e18npc.js
+episode: Campaign 3 Episode 18
+twitchTimeOffset: "00:14:55"
+---

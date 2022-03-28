@@ -1,0 +1,8 @@
+---
+title: testing
+layout: default
+videoId: 'c66mDHckyoM'
+episodeevents: c3e17events.js
+pc: c3lvl5chars.js
+episode: Campaign 3 Episode 17
+---
