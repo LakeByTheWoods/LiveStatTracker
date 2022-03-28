@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<!-- NOTE: Copywrite of character names and stats are owned by the owners of Critical Role. Code is Licenced under the MIT Licence with the exception of YouTube API code which is under Apache 2.0 -->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CR Live Stats</title>
+<style type="text/css">
+body{margin:0px auto;max-width:1280px;line-height:1.6;font-size:18px;color:#444;padding:0 10px;background: grey;}
+h1,h2,h3{line-height:1.2}
+.player{
+	height: 745px;
+}
+.char-card-container{
+	height: 108px;
+}
+.char-card{
+	background: transparent;
+	padding: 12px;
+	width: 296px;
+	float: left;
+}
+.char-card-inner{
+	border: 4px solid black;
+	border-radius: 16px;
+	width: 296px;
+	height: 76px;
+	box-style: border-box;
+	background: darkkhaki;
+	font-size: 12pt;
+	white-space: nowrap;
+}
+.char-card-inner > h1{
+	text-align: center;
+	font-size: 12pt;
+	white-space: nowrap;
+	margin: 0 0 0 0;
+}
+.char-card-inner > h2{
+	text-align: center;
+	font-size: 8pt;
+	white-space: nowrap;
+	margin: 0 0 0 0;
+}
+.char-card-inner > h3{
+	text-align: center;
+	font-size: 30pt;
+	white-space: nowrap;
+	margin: 0 0 0 0;
+	color: darkred;
+}
+
+.button{
+	background: red;
+	float: left;
+}
+.button:hover{
+	background: yellow;
+}
+
+.initiative-list{
+	.width: 100px;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background: darkgray;
+	overflow-x: hidden;
+	padding-top: 108px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	font-size: 12pt;
+}
+
+</style>
+</head>
+
+<body>
+
+	<div class="initiative-list" id=initiative-list></div>
+
+	<div class="char-card-container">
+		<div class="char-card">
+			<div class="char-card-inner"></div>
+		</div>
+		<div class="char-card">
+			<div class="char-card-inner" id=chetney></div>
+		</div>
+		<div class="char-card">
+			<div class="char-card-inner" id=laudna></div>
+		</div>
+		<div class="char-card">
+			<div class="char-card-inner" id=fcg></div>
+		</div>
+	</div>
+
+	<div id=player class="player"></div>
+
+	<div class="char-card">
+		<div class="char-card-inner" id=fearne>
+		</div>
+	</div>
+	<div class="char-card">
+		<div class="char-card-inner" id=imogen>
+		</div>
+	</div>
+	<div class="char-card">
+		<div class="char-card-inner" id=orym>
+		</div>
+	</div>
+	<div class="char-card">
+		<div class="char-card-inner" id=ashton>
+		</div>
+	</div>
+	<h1>Campain 3 Episode 16</h1>
+	<h3>Fan made realtime stats.</h3>
+
+	<div id="npcContainer"></div>
+
+	<h1 id="current_time"></h1>
+
+	<script type="text/javascript">
+
+		var log = console.log;
+
+		var pc = [
+			{ shortname: "Chetney",	name: "Chetney Pock O'Pea",	player: "Travis Willingham",	level: 5, cclass: "Blood Hunter",		AC: 18, max_HP: 46, HP: 46, STR: 17, INT: 15, DEX: 14, WIS: 13, CON: 14, CHA: 10, card: document.getElementById("chetney") },
+			{ shortname: "Laudna",	name: "Laudna",				player: "Marisha Ray", 			level: 5, cclass: "Warlock/Sorcerer",	AC: 13, max_HP: 34, HP: 34, STR:  5, INT: 12, DEX: 14, WIS: 14, CON: 15, CHA: 16, card: document.getElementById("laudna") },
+			{ shortname: "FCG",		name: "Fresh Cut Grass",	player: "Sam Riegel",			level: 5, cclass: "Cleric",				AC: 16, max_HP: 47, HP: 47, STR: 12, INT:  8, DEX: 10, WIS: 16, CON: 18, CHA: 14, card: document.getElementById("fcg") },
+			{ shortname: "Fearne",	name: "Fearne Calloway",	player: "Ashley Johnson",		level: 5, cclass: "Druid",				AC: 17, max_HP: 41, HP: 41, STR:  7, INT:  9, DEX: 14, WIS: 18, CON: 15, CHA: 16, card: document.getElementById("fearne") },
+			{ shortname: "Imogen",	name: "Imogen Temult",		player: "Laura Bailey",			level: 5, cclass: "Sorcerer",			AC: 14, max_HP: 31, HP: 31, STR:  8, INT: 11, DEX: 16, WIS: 13, CON: 14, CHA: 18, card: document.getElementById("imogen") },
+			{ shortname: "Orym",	name: "Orym",				player: "Liam O'Brien",			level: 5, cclass: "Fighter",			AC: 19, max_HP: 49, HP: 49, STR: 10, INT: 13, DEX: 20, WIS: 15, CON: 15, CHA: 11, card: document.getElementById("orym") },
+			{ shortname: "Ashton",	name: "Ashton Greymoore",	player: "Taliesin Jaffe",		level: 5, cclass: "Barbarian",			AC: 16, max_HP: 58, HP: 58, STR: 18, INT: 12, DEX: 16, WIS: 13, CON: 17, CHA:  6, card: document.getElementById("ashton") },
+		];
+
+		var pcChetney	= pc[0];
+		var pcLaudna	= pc[1];
+		var pcFCG		= pc[2];
+		var pcFearne	= pc[3];
+		var pcImogen	= pc[4];
+		var pcOrym		= pc[5];
+		var pcAshton	= pc[6];
+
+		var npc = [
+			{ shortname: "ShadeMoth", 	name: "Shade Mother", 	HP: 0 },
+			{ shortname: "ShadeCreep",	name: "Shade Creepers",	HP: 0 },
+			{ shortname: "Gus",				name: "Gus",				HP: 0 },
+			{ shortname: "LadyEmoth", 		name: "Lady Emoth", 		HP: 0 },
+			{ shortname: "Ollie",			name: "Ollie",			HP: 0 },
+			{ shortname: "Husks",			name: "Husks",			HP: 0 },
+		];
+
+		var npcShadeMoth = npc[0];
+		var npcShadeCreep = npc[1];
+		var npcGus = npc[2];
+		var npcLadyEmoth = npc[3];
+		var npcOllie = npc[4];
+		var npcHusks = npc[5];
+
+		var initiativeList = [];
+		function eventBattleStart(direction) {
+			currentTurn = null;
+			initiativeList = [];
+			renderInitiativeList();
+		}
+
+		function eventEnterInitiative(direction, char, initiative) {
+			if (direction)
+				initiativeList.push({c: char, i: initiative});
+			else
+				initiativeList = initiativeList.filter(item=>item.c!=char);
+			initiativeList.sort((a,b)=>b.i - a.i);
+
+			renderInitiativeList();
+		}
+
+		function renderInitiativeList() {
+			var ihtml = "";
+			for (var i = 0; i < initiativeList.length; i++) {
+				ihtml += "<div" + (currentTurn === initiativeList[i].c ? " style=\"background-color:lightgreen\"" : "") + ">" +
+					initiativeList[i].c.name +
+					"</div>"
+			}
+			document.getElementById("initiative-list").innerHTML = ihtml;
+		}
+
+		var currentTurn;
+		function eventTurnStarts(direction, char) {
+			if (direction)
+				currentTurn = char;
+			else
+			{
+				const index = initiativeList.findIndex((i)=>i.c == char)
+				if (index <= 0)
+					currentTurn = initiativeList[initiativeList.length - 1].c;
+				else
+					currentTurn = initiativeList[index - 1].c;
+			}
+			renderInitiativeList();
+		}
+
+		function eventHPSet(direction, char, set) {
+			if (direction) {
+				if (!('HPHist' in char))
+					char.HPHist = [];
+				char.HPHist.push(char.HP);
+				char.HP = set;
+			} else {
+				const pop =  char.HPHist.pop();
+
+				char.HP = pop;
+			}
+		}
+
+		var events = [
+			{ time:12221, callback:(direction)=> { eventHPDiff(direction, pcOrym, pcOrym, 5); } },
+			{ time:13075, callback:(direction)=> { eventHPSet(direction, pcOrym, pcOrym.max_HP); } },
+		];
+
+		function cpyHPDiff(pre, pc) {
+			return navigator.clipboard.writeText("{ time:" + Math.round(player.getCurrentTime()) + ", callback:(direction)=> { eventHPDiff(direction, from, " + pre + pc.shortname + ", X); } },");
+		}
+
+		function cpyTurnStarts(pre, pc) {
+			return navigator.clipboard.writeText("{ time:" + Math.round(player.getCurrentTime()) + ", callback:(direction)=> { eventTurnStarts(direction, " + pre + pc.shortname + "); } },");
+		}
+
+		function cpyEnterInitiative(pre, pc) {
+			return navigator.clipboard.writeText("{ time:" + Math.round(player.getCurrentTime()) + ", callback:(direction)=> { eventTurnStarts(direction, " + pre + pc.shortname + ", X); } },");
+		}
+
+		function renderDevButtonsPC(pc) {
+			return "";
+			return "<div onclick=\"cpyHPDiff('pc',pc" + pc.shortname + ")\" class=\"button\">🗡</div>" +
+			"<div onclick=\"cpyTurnStarts('pc',pc" + pc.shortname + ")\" class=\"button\">🕑</div>" +
+			"<div onclick=\"cpyEnterInitiative('pc',pc" + pc.shortname + ")\" class=\"button\">⎆</div>";
+		}
+
+		function renderDevButtonsNPC(pc) {
+			return "";
+
+			return "<div onclick=\"cpyHPDiff('npc',npc" + pc.shortname + ")\" class=\"button\">🗡</div>" +
+			"<div onclick=\"cpyTurnStarts('npc',npc" + pc.shortname + ")\" class=\"button\">🕑</div>" +
+			"<div onclick=\"cpyEnterInitiative('npc',npc" + pc.shortname + ")\" class=\"button\">⎆</div>";
+		}
+
+		function renderPlayerCharacters() {
+			for (var i = 0; i < pc.length; i++) {
+				pc[i].card.innerHTML =
+					"<h1>" + pc[i].name + "</h1>" +
+					//"<h2>" + pc[i].cclass + "</h2>" +
+					"<h3>❤" + pc[i].HP + "/" + pc[i].max_HP + "</h3>" +
+
+					renderDevButtonsPC(pc[i])
+					;
+			}
+		}
+
+		function renderNonPlayerCharacters() {
+			var ihtml = "";
+			for (var i = 0; i < npc.length; i++) {
+				ihtml += "<div class=\"char-card\"><div class=\"char-card-inner\">" +
+					"<h1>" + npc[i].name + "</h1>" +
+					"<h3>❤" + npc[i].HP + "</h3>" +
+
+					renderDevButtonsNPC(npc[i]) +
+					"</div></div>"
+					;
+			}
+
+			document.getElementById("npcContainer").innerHTML = ihtml;
+		}
+
+		function eventHPDiff(direction, from, to, diff) {
+			if (direction)
+				to.HP -= diff;
+			else
+				to.HP += diff;
+		}
+
+		var tag = document.createElement('script');
+		tag.src = "https://www.youtube.com/iframe_api";
+		var firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+		var player;
+		function onYouTubeIframeAPIReady() {
+			player = new YT.Player('player', {
+				height: '745',
+				width: '1280',
+				videoId: 'c66mDHckyoM',
+				playerVars: {
+					'playsinline': 1
+				},
+				events: {
+					'onReady': onPlayerReady
+				},
+
+				wmode: 'transparent'
+			});
+		}
+
+		var timer;
+		function onPlayerReady(event) {
+			timer = window.setInterval(tick, 250);
+			renderPlayerCharacters();
+			renderNonPlayerCharacters();
+		}
+
+		var lastEventTime = -1;
+		var nextEventIndex = 0;
+
+		function applyEvents(time_end) {
+			for (; nextEventIndex < events.length; nextEventIndex++) {
+				var e = events[nextEventIndex];
+				if (e.time >= time_end)
+				{
+					return;
+				}
+				lastEventTime = e.time;
+				e.callback(true);
+			}
+		}
+
+		function revertEvents(time_start) {
+			var prevEventIndex = nextEventIndex - 1;
+			if (prevEventIndex < 0)
+			{
+				lastEventTime = -1;
+				nextEventIndex = 0;
+				return;
+			}
+
+			for (; prevEventIndex >= 0; prevEventIndex--) {
+				var e = events[prevEventIndex];
+				if (e.time < time_start)
+				{	
+					lastEventTime = e.time;
+					nextEventIndex = prevEventIndex + 1;
+					return;
+				}
+				e.callback(false);
+			}
+			lastEventTime = -1;
+			nextEventIndex = 0;
+		}
+
+		function tick() {
+			document.getElementById("current_time").innerHTML = player.getCurrentTime() + "seconds";
+			const currentTime = player.getCurrentTime();
+			if (lastEventTime > currentTime)
+			{
+				revertEvents(currentTime);
+				renderPlayerCharacters();
+				renderNonPlayerCharacters();
+			}
+			else if (nextEventIndex >= events.length) {
+				// End of events
+			}
+			else if (events[nextEventIndex].time < currentTime)
+			{
+				applyEvents(currentTime);
+				renderPlayerCharacters();
+				renderNonPlayerCharacters();
+			}
+		}
+
+	</script>
+</body>
+
+</html>
